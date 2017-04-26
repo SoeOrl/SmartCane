@@ -15,61 +15,20 @@ namespace Smart_Cane
 {
     public class mylocation : Location, IComparable<mylocation>
     {
-        private string stop_id;
-        private string route_id;
-        private string last_stop;
-        private double dist_between;
+      
         public mylocation(string i) : base(i)
         {
             Provider = i;
         }
 
-        public string Stop_Id
-        {
-            get
-            {
-                return stop_id;
-            }
-            set
-            {
-                stop_id = value;
-            }
+        public string Stop_Id { get; set; }
+        
+        public string Route_Id { get; set; }
 
-        }
-        public string Route_Id
-        {
-            get
-            {
-                return route_id;
-            }
-            set
-            {
-                route_id = value;
-            }
-        }
-        public string Last_Stop
-        {
-            get
-            {
-                return last_stop;
-            }
-            set
-            {
-                last_stop = value;
-            }
-        }
-        public double Dist_Between
-        {
-            get
-            {
-                return dist_between;
-            }
-            set
-            {
-                dist_between = value;
-            }
+        public string Last_Stop { get; set; }
 
-        }
+        public double Dist_Between { get; set; }
+      
 
 
         public static bool operator <(mylocation lhs, mylocation rhs)

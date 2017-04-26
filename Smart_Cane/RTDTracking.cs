@@ -1,28 +1,20 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 using Android.App;
 using Android.Content;
 using Android.OS;
-using Android.Runtime;
-using Android.Views;
 using Android.Widget;
 using Android.Locations;
-using System.Threading;
 using Plugin.Geolocator;
 using System.IO;
-using System.Reflection;
 using Android.Content.Res;
-using System.Collections.ObjectModel;
 using System.Net;
 
 using transit_realtime;
 using ProtoBuf;
 
-// Give Rapsberry a boolean to start a scan of t sourroundings, and will receive a boolean in return. I will send a scan request every x seconds. If i get true then 
-//trigger message to warn user. Dynamic data. 
+
 namespace Smart_Cane
 {
     [Activity(Label = "Test")]
@@ -45,28 +37,22 @@ namespace Smart_Cane
         static double longitude = new double();
         static double latitude = new double();
         List<mylocation> near_stops = new List<mylocation>();
-        //ObservableCollection<mylocation> near_stops = new ObservableCollection<mylocation>();
+
         public FeedMessage feed = new FeedMessage();
         protected override void OnCreate(Bundle savedInstanceState)
         {
+
             WebRequest myWebRequest = HttpWebRequest.Create(myUri);
-
             HttpWebRequest myHttpWebRequest = (HttpWebRequest)myWebRequest;
-
-            // This username nad password is issued to John Bennett for the IWKS 4120 class
-            // Please DO NOT redistribute
-            NetworkCredential myNetworkCredential = new NetworkCredential(); // insert credentials
-
+            NetworkCredential myNetworkCredential = new NetworkCredential(GetString(Resource.String.User),GetString(Resource.String.Pass)); // insert credentials
             CredentialCache myCredentialCache = new CredentialCache();
             myCredentialCache.Add(myUri, "Basic", myNetworkCredential);
-
             myHttpWebRequest.PreAuthenticate = true;
             myHttpWebRequest.Credentials = myCredentialCache;
-            
-          feed = Serializer.Deserialize < FeedMessage>(myWebRequest.GetResponse().GetResponseStream());
+            feed = Serializer.Deserialize < FeedMessage>(myWebRequest.GetResponse().GetResponseStream());
 
             
-            AssetManager assets = this.Assets;
+            AssetManager assets = Assets;
             var locator = CrossGeolocator.Current;
             locator.DesiredAccuracy = 100;
             base.OnCreate(savedInstanceState);
@@ -79,9 +65,6 @@ namespace Smart_Cane
                 {
 
                         var position = await locator.GetPositionAsync(20000);
-                        Console.WriteLine("Position Status: {0}", position.Timestamp);
-                        Console.WriteLine("Position Latitude: {0}", position.Latitude);
-                        Console.WriteLine("Position Longitude: {0}", position.Longitude);
                         longitude = position.Longitude;
                         latitude = position.Latitude;
                         my_loc.Latitude = position.Latitude;
@@ -97,9 +80,7 @@ namespace Smart_Cane
         public async void Stops_Near_Me()
         {
             // Read each line of the file into a string array. Each element
-            // of the array is one line of the file.
-
-
+            // of the array is one line of the file
             
             StreamReader stream = new StreamReader(Assets.Open("stops.txt"));
 
@@ -116,8 +97,6 @@ namespace Smart_Cane
                 double.TryParse(lat, out lats);
 
                 mylocation targetLocation = new mylocation("blah blah");
-                //    targetLocation.Latitude = double.Parse(lat);
-                //   targetLocation.Longitude = double.Parse(lon);
                 float acc;
                 targetLocation.Latitude = lats;
                 targetLocation.Longitude = lons;
@@ -129,21 +108,18 @@ namespace Smart_Cane
                 targetLocation.Last_Stop = stop_values[6].Remove(0,1);
                 Distance_Between(targetLocation);
 
-
-                //add form for user to fill out what they know. Bus #, beginning loc, end loc, general area, 
-                //integrate feed
-                //voice saving
             }
+
             near_stops.Sort();
+
             foreach (mylocation near in near_stops)
             {
                 string temp = near.Provider;
                 mItems.Add(temp);
             }
+
             var mylistview = new ListView(this);
-
             mylistview = FindViewById<ListView>(Resource.Id.Locations);
-
             mylistview.Clickable.Equals(true);
             ArrayAdapter<string> adaptor = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, mItems);
             mylistview.Adapter = adaptor;
@@ -155,10 +131,9 @@ namespace Smart_Cane
         }
         void listView_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
-          
-            
+
             Console.WriteLine("This is a test" + mItems[e.Position]);
-            var test = new AlertDialog.Builder(this);
+            var alertbuild = new AlertDialog.Builder(this);
             {
                 for (int x = 0; x<feed.entity.Count; x++)
                 {
@@ -177,20 +152,15 @@ namespace Smart_Cane
                                 minuteD = (int)(nextD / 60);
                                 minuteA = (int) (nextA / 60);
                                 break;
-                                
-                               
-                               
                             }
                         }
-                    }
-                    
-                 //   if (near_stops[elocation].Accuracy.ToString() == feed.entity[x].trip_update.stop_time_update.)
+                    }      
                 }
-                test.SetTitle(" Do you want to go here?");
-                test.SetMessage(mItems[e.Position] + "\nNext Arrival in: " + minuteA + " minutes\nNext Departure in: " + minuteD +" minutes");
-                test.SetPositiveButton("YES", OkAction);
-                test.SetNegativeButton("NO", CancelAction);
-                var customAlert = test.Create();
+                alertbuild.SetTitle(" Do you want to go here?");
+                alertbuild.SetMessage(mItems[e.Position] + "\nNext Arrival in: " + minuteA + " minutes\nNext Departure in: " + minuteD +" minutes");
+                alertbuild.SetPositiveButton("YES", OkAction);
+                alertbuild.SetNegativeButton("NO", CancelAction);
+                var customAlert = alertbuild.Create();
                 elocation = e.Position;
                 customAlert.Show();
             }
@@ -208,14 +178,8 @@ namespace Smart_Cane
         }
         private void CancelAction(object sender, DialogClickEventArgs e)
         {
-            //do something on cancel selected
-            Console.WriteLine("in cancel");
         }
 
-    
-    
-        
-        // determine whether the stops are within one mile of my current location, and if so, add to array
         public void Distance_Between(mylocation RTD_Stop)
         {
             double distance_betn = my_loc.DistanceTo(RTD_Stop);
@@ -225,14 +189,8 @@ namespace Smart_Cane
                 RTD_Stop.Dist_Between = distance_betn;
                
                 near_stops.Add(RTD_Stop);
-                Console.WriteLine("Found a position wihtin 1 mile");
-
             }
-
-
         }
-
-
     }
 }
 
