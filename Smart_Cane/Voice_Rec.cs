@@ -13,7 +13,7 @@ using Android.Media;
 
 namespace Smart_Cane
 {
-    [Activity(Label = "Activity1")]
+    [Activity(Label = "Voice Recording")]
     public class Voice_Rec : Activity
     {
         MediaRecorder _recorder;

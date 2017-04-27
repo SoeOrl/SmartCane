@@ -17,7 +17,7 @@ using ProtoBuf;
 
 namespace Smart_Cane
 {
-    [Activity(Label = "Test")]
+    [Activity(Label = "RTD",ScreenOrientation =Android.Content.PM.ScreenOrientation.Portrait)]
     public class RTDTracking : Activity
     {
 
@@ -25,7 +25,7 @@ namespace Smart_Cane
         //Uri myUri = new Uri("http://www.rtd-denver.com/google_sync/VehiclePosition.pb");
 
 
-
+        
           
         
         int minuteA,minuteD;
@@ -191,6 +191,7 @@ namespace Smart_Cane
                 near_stops.Add(RTD_Stop);
             }
         }
+
     }
 }
 
