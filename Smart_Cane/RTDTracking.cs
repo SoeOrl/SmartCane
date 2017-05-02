@@ -106,6 +106,7 @@ namespace Smart_Cane
                 targetLocation.Stop_Id = stop_values[5].Remove(0,1);
                 targetLocation.Route_Id = stop_values[0].Remove(0, 6);
                 targetLocation.Last_Stop = stop_values[6].Remove(0,1);
+                targetLocation.Train_Or_Not = stop_values[7].Remove(0, 1);
                 Distance_Between(targetLocation);
 
             }
@@ -157,7 +158,15 @@ namespace Smart_Cane
                     }      
                 }
                 alertbuild.SetTitle(" Do you want to go here?");
-                alertbuild.SetMessage(mItems[e.Position] + "\nNext Arrival in: " + minuteA + " minutes\nNext Departure in: " + minuteD +" minutes");
+                if (near_stops[e.Position].Train_Or_Not == "1")
+                {
+                    alertbuild.SetMessage(mItems[e.Position] + "\nNext Arrival in: " + minuteA + " minutes\nNext Departure in: " + minuteD + " minutes\nDue to RTD not giving data the times listed may not be accurate");
+                }
+                else
+                {
+                    alertbuild.SetMessage(mItems[e.Position] + "\nNext Arrival in: " + minuteA + " minutes\nNext Departure in: " + minuteD + " minutes");
+                }
+
                 alertbuild.SetPositiveButton("YES", OkAction);
                 alertbuild.SetNegativeButton("NO", CancelAction);
                 var customAlert = alertbuild.Create();
@@ -184,7 +193,7 @@ namespace Smart_Cane
         {
             double distance_betn = my_loc.DistanceTo(RTD_Stop);
 
-            if (distance_betn <= 500)
+            if (distance_betn <= Global.range)
             {
                 RTD_Stop.Dist_Between = distance_betn;
                

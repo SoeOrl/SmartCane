@@ -29,7 +29,7 @@ namespace Smart_Cane
 
         public double Dist_Between { get; set; }
       
-
+        public string Train_Or_Not { get; set; }
 
         public static bool operator <(mylocation lhs, mylocation rhs)
         {

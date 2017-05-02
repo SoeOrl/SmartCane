@@ -6,9 +6,18 @@
     android:minWidth="25px"
     android:minHeight="25px">
     <TextView
-        android:text="Created By: Cathalina Fontenelle, Natalie Nguyen, Soeren Orlowski \n\n In the future this is were some settings will reside like where to save file 
-and also if you always want up to date RTD or not. For now this is all and pending implementation in the future."
+        android:text="Created By: Cathalina Fontenelle, Natalie Nguyen, Soeren Orlowski \n\n In the future this is were some settings will reside like where to save file  and also if you always want up to date RTD or not. For now this is all and pending implementation in the future."
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textView1" />
+  <EditText
+      android:inputType="number"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:id="@+id/SetDistance"
+      android:hint="Please enter a distance: Default is 250 meters" />
+  <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/CurrentDistance" />
 </LinearLayout>
